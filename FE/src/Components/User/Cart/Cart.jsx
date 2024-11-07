@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 
+import { useCart } from "../../../context/CartContext";
 import { IoIosArrowDropleft } from "react-icons/io";
 import { IoIosArrowDropright } from "react-icons/io";
 
@@ -48,56 +49,64 @@ const fakeData = [
 const additionalProducts = [
     {
         id: 3,
-        name: "Máy tính xách tay ASUS ROG",
+        quantity : 1,
+        title: "Máy tính xách tay ASUS ROG",
         description: "Core i7, 16GB RAM, 512GB SSD",
         price: 25000000,
         image: P21,
     },
     {
         id: 4,
-        name: "Tai nghe Sony WH-1000XM4",
+        quantity : 1,
+        title: "Tai nghe Sony WH-1000XM4",
         description: "Khử tiếng ồn, Bluetooth",
         price: 7500000,
         image: P21,
     },
     {
-        id: 3,
-        name: "Máy tính xách tay ASUS ROG",
+        id: 5,
+        quantity : 1,
+        title: "Máy tính xách tay ASUS ROG",
         description: "Core i7, 16GB RAM, 512GB SSD",
         price: 25000000,
         image: P21,
     },
     {
-        id: 4,
-        name: "Tai nghe Sony WH-1000XM4",
+        id: 6,
+        quantity : 1,
+        title: "Tai nghe Sony WH-1000XM4",
         description: "Khử tiếng ồn, Bluetooth",
         price: 7500000,
         image: P21,
     },
     {
-        id: 3,
-        name: "Máy tính xách tay ASUS ROG",
+        id: 7,
+        quantity : 1,
+        title: "Máy tính xách tay ASUS ROG",
         description: "Core i7, 16GB RAM, 512GB SSD",
         price: 25000000,
         image: P21,
     },
     {
-        id: 4,
-        name: "Tai nghe Sony WH-1000XM4",
+        id: 8,
+        quantity : 1,
+        title: "Tai nghe Sony WH-1000XM4",
         description: "Khử tiếng ồn, Bluetooth",
         price: 7500000,
         image: P21,
     },
     {
-        id: 3,
-        name: "Máy tính xách tay ASUS ROG",
+        id: 9,
+        quantity : 1,
+        title: "Máy tính xách tay ASUS ROG",
         description: "Core i7, 16GB RAM, 512GB SSD",
         price: 25000000,
         image: P21,
     },
     {
-        id: 4,
-        name: "Tai nghe Sony WH-1000XM4",
+        id: 10,
+        quantity : 1,
+        title: "Tai nghe Sony WH-1000XM4",
         description: "Khử tiếng ồn, Bluetooth",
         price: 7500000,
         image: P21,
@@ -112,24 +121,24 @@ const formatCurrency = (value) => {
 };
 
 export default function Cart() {
-    const [cartItems, setCartItems] = useState(fakeData);
+    const { cartItems, increaseQuantity, decreaseQuantity, removeItem, addToCart } = useCart();
     const [sortOption, setSortOption] = useState(""); // State cho lựa chọn sắp xếp
 
-    const increaseQuantity = (id) => {
-        setCartItems(cartItems.map(item =>
-            item.id === id ? { ...item, quantity: item.quantity + 1 } : item
-        ));
-    };
+    // const increaseQuantity = (id) => {
+    //     setCartItems(cartItems.map(item =>
+    //         item.id === id ? { ...item, quantity: item.quantity + 1 } : item
+    //     ));
+    // };
 
-    const decreaseQuantity = (id) => {
-        setCartItems(cartItems.map(item =>
-            item.id === id ? { ...item, quantity: Math.max(1, item.quantity - 1) } : item
-        ));
-    };
+    // const decreaseQuantity = (id) => {
+    //     setCartItems(cartItems.map(item =>
+    //         item.id === id ? { ...item, quantity: Math.max(1, item.quantity - 1) } : item
+    //     ));
+    // };
 
-    const handleRemoveItem = (id) => {
-        setCartItems(cartItems.filter(item => item.id !== id));
-    };
+    // const handleRemoveItem = (id) => {
+    //     setCartItems(cartItems.filter(item => item.id !== id));
+    // };
 
     const productRowRef = useRef(null);
 
@@ -206,15 +215,15 @@ export default function Cart() {
                                                                 <div className="d-flex flex-row align-items-center">
                                                                     <div>
                                                                         <MDBCardImage
-                                                                            src={item.image}
+                                                                            src={item.image || "https://via.placeholder.com/150"}
                                                                             fluid className="rounded-3"
                                                                             style={{ width: "65px" }}
                                                                             alt="Shopping item"
                                                                         />
                                                                     </div>
                                                                     <div className="ms-3">
-                                                                        <MDBTypography tag="h5">{item.name}</MDBTypography>
-                                                                        <p className="small mb-0">{item.description}</p>
+                                                                        <MDBTypography tag="h5">{item.title}</MDBTypography>
+                                                                        {/* <p className="small mb-0">{item.title}</p> */}
                                                                     </div>
                                                                 </div>
                                                                 <div className="d-flex flex-row align-items-center">
@@ -234,7 +243,7 @@ export default function Cart() {
                                                                     <div style={{ width: "auto", marginRight: "10px" }}>
                                                                         <MDBTypography tag="h5" className="mb-0">{formatCurrency(item.price * item.quantity)}</MDBTypography>
                                                                     </div>
-                                                                    <a href="#!" onClick={() => handleRemoveItem(item.id)} style={{ color: item.quantity > 1 ? "#cecece" : "#ccc" }}>
+                                                                    <a href="#!" onClick={() => removeItem(item.id)} style={{ color: item.quantity > 1 ? "#cecece" : "#ccc" }}>
                                                                         <MDBIcon fas icon="trash-alt" />
                                                                     </a>
                                                                 </div>
@@ -299,12 +308,12 @@ export default function Cart() {
                     <div className="product-row" ref={productRowRef}>
                         {additionalProducts.map(product => (
                             <div className="product-card" key={product.id}>
-                                <img src={product.image} alt={product.name} className="product-image" />
+                                <img src={product.image || "https://via.placeholder.com/150"} alt={product.title || "Product"} className="product-image" />
                                 <div className="product-body">
-                                    <h5 className="product-name">{product.name}</h5>
+                                    <h5 className="product-name">{product.title}</h5>
                                     <p className="product-description small">{product.description}</p>
                                     <h5 className="product-price">{formatCurrency(product.price)}</h5>
-                                    <button className="add-to-cart" onClick={() => setCartItems([...cartItems, { ...product, quantity: 1 }])}>
+                                    <button className="add-to-cart" onClick={() => addToCart(product)}>
                                         Thêm vào giỏ hàng
                                     </button>
                                 </div>

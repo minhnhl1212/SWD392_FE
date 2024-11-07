@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useCart } from '../../../context/CartContext';
 import './ItemDetails.css';
 import Header from "../../../Components/Items/Header/Header";
 import Footer from "../../../Components/Items/Footer/Footer";
@@ -31,6 +32,7 @@ const ItemDetails = () => {
     const [error, setError] = useState(null);
     const [cartCount] = useState(10); // Giả sử số lượng sản phẩm trong giỏ là 10
     const [mainImage, setMainImage] = useState(''); // Thêm state để quản lý ảnh chính
+    const { addToCart } = useCart();
 
     const imagePaths = [
         P218,
@@ -44,11 +46,13 @@ const ItemDetails = () => {
     // Sample product data
     const fakeData = [
         {
+            id: 1,
+            quantity: 1,
             title: 'Combo xe điều khiển từ xa có camera giám sát',
             description: `Combo xe điều khiển từ xa có camera giám sát là combo do chính NSHOP biên soạn, thường được sử dụng để học tập, nghiên cứu, giải trí…v…v.
             Kết hợp với module ESP32-Camera, chúng ta có thể điều khiển thông qua wifi đang sử dụng bằng website thông qua địa chỉ IP và không cần phải theo dõi khi điều khiển như combo dùng bluetooth vì đã được tích hợp thêm camera có thể giám sát qua màn hình và điều khiển đi bất kì đâu.
             Lưu ý: combo này là tự ráp, quý khách chỉ cần đấu nối và nạp code theo đúng sơ đồ là chạy, quý khách có thể chỉnh sửa lại code để tối ưu hơn.`,
-            price: '560.000',
+            price: '560000',
             currency: '₫',
             images: [P21, P211, P212, P213, P214, P215, P216, P217],
             status: 'Còn hàng',
@@ -215,6 +219,13 @@ void loop() {}
         }
     }, [title, navigate]);
 
+    const handleAddToCart = () => {
+        if (product) {
+            addToCart(product);
+            alert("Sản phẩm đã được thêm vào giỏ hàng!");
+        }
+    };
+
     if (loading) {
         return <p>Loading...</p>;
     }
@@ -258,9 +269,10 @@ void loop() {}
                         <div className="item-details-content">
                             <h2>{product.title}</h2>
                             <span className="item-price">{product.price} {product.currency}</span>
-                            <button className="btn-buy" disabled={product.status === 'Hết hàng'}>
+                            <button className="btn-buy" onClick={handleAddToCart} disabled={product.status === 'Hết hàng'}>
                                 Chọn mua
                             </button>
+                            
                             <span className="item-status">Sản phẩm hiện đang {product.status}.</span>
                             <a href="#" className="store-availability">Xem chi nhánh còn hàng</a>
                             <div className="item-description">
