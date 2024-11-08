@@ -222,7 +222,7 @@ void loop() {}
     const handleAddToCart = () => {
         if (product) {
             addToCart(product);
-            alert("Sản phẩm đã được thêm vào giỏ hàng!");
+            alert("Product has been added to cart!");
         }
     };
 
@@ -270,13 +270,13 @@ void loop() {}
                             <h2>{product.title}</h2>
                             <span className="item-price">{product.price} {product.currency}</span>
                             <button className="btn-buy" onClick={handleAddToCart} disabled={product.status === 'Hết hàng'}>
-                                Chọn mua
+                                Buy
                             </button>
                             
-                            <span className="item-status">Sản phẩm hiện đang {product.status}.</span>
-                            <a href="#" className="store-availability">Xem chi nhánh còn hàng</a>
+                            <span className="item-status">Products currently available {product.status}.</span>
+                            <a href="#" className="store-availability">See branch availability</a>
                             <div className="item-description">
-                                <h3>Mô tả sản phẩm</h3>
+                                <h3>Product description</h3>
                                 <p>{product.description}</p>
                             </div>
                         </div>
@@ -287,18 +287,18 @@ void loop() {}
             </div>
 
             <div className='item-details-container-2'>
-                <h3>Chi tiết sản phẩm</h3>
+                <h3>Product details</h3>
                 <p>{product.additionalInfo.details.description}</p>
-                <h4>Danh sách sản phẩm combo xe điều khiển:</h4>
+                <h4>List of control car combo products:</h4>
                 <ul>
                     {product.additionalInfo.details.productList.map((item, index) => (
                         <li key={index}>{item}</li>
                     ))}
                 </ul>
-                <p>Khối lượng: {product.additionalInfo.details.weight}</p>
-                <h4>Hướng dẫn nạp code:</h4>
+                <p>Volume: {product.additionalInfo.details.weight}</p>
+                <h4>Instructions for loading code:</h4>
                 <p>{product.additionalInfo.details.codeInstructions}</p>
-                <h4>Hướng dẫn đấu nối khi nạp code</h4>
+                <h4>Connection instructions when loading code</h4>
                 <ol>
                     {product.additionalInfo.details.connectionInstructions.map((item, index) => (
                         <li key={index}>

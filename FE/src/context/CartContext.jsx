@@ -1,22 +1,25 @@
 // src/contexts/CartContext.js
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
-    const [cartItems, setCartItems] = useState([]);
+    // Khởi tạo `cartItems` từ `localStorage` nếu có, nếu không thì là mảng rỗng
+    const [cartItems, setCartItems] = useState(() => {
+        const savedCart = localStorage.getItem("cartItems");
+        return savedCart ? JSON.parse(savedCart) : [];
+    });
+
+    // Lưu `cartItems` vào `localStorage` mỗi khi `cartItems` thay đổi
+    useEffect(() => {
+        localStorage.setItem("cartItems", JSON.stringify(cartItems));
+    }, [cartItems]);
 
     const addToCart = (product) => {
         setCartItems((prevItems) => {
             const existingItem = prevItems.find((item) => item.id === product.id);
             const productImage = Array.isArray(product.images) ? product.images[0] : product.images;
-            // let img = "";
-            // const productImage = Array.isArray(product.image)
-            // if (productImage){
-            //     img = product.image[0];
-            // }else{
-            //     img = product.image;
-            // }
+
             if (existingItem) {
                 return prevItems.map((item) =>
                     item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
@@ -51,10 +54,10 @@ export const CartProvider = ({ children }) => {
         );
     };
 
+    // Hàm xóa sản phẩm khỏi giỏ hàng
     const removeItem = (id) => {
         setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
     };
-
 
     return (
         <CartContext.Provider value={{ cartItems, addToCart, increaseQuantity, decreaseQuantity, removeItem }}>

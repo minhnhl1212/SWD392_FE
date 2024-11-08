@@ -7,6 +7,7 @@ import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 import { useCart } from "../../../context/CartContext";
 import { IoIosArrowDropleft } from "react-icons/io";
 import { IoIosArrowDropright } from "react-icons/io";
+import CryptoJS from 'crypto-js';
 
 
 import {
@@ -150,6 +151,66 @@ export default function Cart() {
             productRowRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
         }
     };
+     // Hàm xử lý thanh toán trực tiếp với VNPay demo
+    const handlePayment = () => {
+        if (cartItems.length === 0) {
+            // Hiển thị thông báo nếu giỏ hàng trống
+            alert("Please select items before payment.");
+            return;
+        }
+        const vnpayDemoUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
+        const date = new Date();
+        const vnpCreateDate = `${date.getFullYear()}${String(date.getMonth() + 1).padStart(2, '0')}${String(date.getDate()).padStart(2, '0')}${String(date.getHours()).padStart(2, '0')}${String(date.getMinutes()).padStart(2, '0')}${String(date.getSeconds()).padStart(2, '0')}`;
+        
+        const expireDate = new Date(date.getTime() + 15 * 60 * 1000);
+        const vnpExpireDate = `${expireDate.getFullYear()}${String(expireDate.getMonth() + 1).padStart(2, '0')}${String(expireDate.getDate()).padStart(2, '0')}${String(expireDate.getHours()).padStart(2, '0')}${String(expireDate.getMinutes()).padStart(2, '0')}${String(expireDate.getSeconds()).padStart(2, '0')}`;
+    
+
+        // Tham số thanh toán
+        const params = {
+            vnp_Version: "2.1.0",
+            vnp_Command: "pay",
+            vnp_TmnCode: "ME8MTL4P", // Thay YOUR_TMNCODE bằng mã TmnCode bạn nhận từ VNPay
+            vnp_Amount: cartItems.reduce((total, item) => total + item.price * item.quantity, 0) * 100, // Tổng tiền tính bằng đồng
+            vnp_BankCode : "VNBANK",
+            vnp_CreateDate: vnpCreateDate,
+            vnp_CurrCode: "VND",
+            vnp_IpAddr: "127.0.0.1",
+            vnp_Locale: "vn",
+            vnp_OrderInfo: "Thanh toán đơn hàng tại cửa hàng XYZ",
+            vnp_OrderType: "other",
+            vnp_ReturnUrl: "http://nshop2.vn:5173//checkout-success", // URL trả về sau khi thanh toán thành công
+            vnp_ExpireDate : vnpExpireDate,
+            vnp_TxnRef: Date(date.getTime() + 30 * 60 * 1000).toString(), // Mã đơn hàng (mỗi đơn hàng một mã duy nhất)
+            // vnp_SecureHash : "NY4ZISFPPI1HP81EQ4K46MQJ2DYD128Y",
+        };
+
+        // Khóa bí mật từ VNPay
+    const vnp_HashSecret = "NY4ZISFPPI1HP81EQ4K46MQJ2DYD128Y";
+        // Sắp xếp các tham số theo thứ tự từ điển (alphabetical order)
+    const sortedParams = Object.keys(params)
+    .sort()
+    .reduce((acc, key) => {
+        acc[key] = params[key];
+        return acc;
+    }, {});
+
+// Tạo chuỗi query từ các tham số đã sắp xếp
+const queryString = new URLSearchParams(sortedParams).toString();
+
+// Tạo chữ ký HMAC SHA-512 từ chuỗi query và khóa bí mật
+const vnp_SecureHash = CryptoJS.HmacSHA512(queryString, vnp_HashSecret).toString(CryptoJS.enc.Hex);
+
+// Thêm `vnp_SecureHash` vào params
+params.vnp_SecureHash = vnp_SecureHash;
+
+        // Tạo chuỗi query từ params
+        // const queryString = new URLSearchParams(params).toString();
+        const paymentUrl = `${vnpayDemoUrl}?${new URLSearchParams(params).toString()}`;
+
+        // Chuyển hướng đến trang thanh toán VNPay
+        window.location.href = paymentUrl;
+    };
 
     // Hàm sắp xếp sản phẩm
     const sortProducts = (items) => {
@@ -286,9 +347,24 @@ export default function Cart() {
                                                             <MDBInput className="mb-4" label="Card Number" type="text" size="lg" minLength="19" maxLength="19" placeholder="1234 5678 9012 3457" contrast />
                                                             <MDBInput className="mb-4" label="Expiration" type="text" size="lg" placeholder="MM/YYYY" contrast />
                                                             <MDBInput className="mb-4" label="CVV" type="password" size="lg" minLength="3" maxLength="3" placeholder="CVV" contrast />
-                                                            <MDBBtn type="submit" block size="lg" className="mb-4" style={{ backgroundColor: "#00897b" }}>
-                                                                Pay
-                                                            </MDBBtn>
+                                                            <button
+    
+    onClick={handlePayment}
+    type="button"
+    style={{
+        backgroundColor: "#00897b",
+        color: "#fff", // Đặt màu chữ nếu cần
+        padding: "10px 20px",
+        fontSize: "18px",
+        border: "none",
+        borderRadius: "4px",
+        cursor: "pointer",
+        width: "100%", // Để thay thế cho `block` trong MDBBtn
+        marginBottom: "16px" // Thay thế `mb-4` trong MDB
+    }}
+>
+    Pay
+</button>
                                                         </form>
                                                     </MDBCardBody>
                                                 </MDBCard>

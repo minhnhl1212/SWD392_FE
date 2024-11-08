@@ -147,28 +147,43 @@ export default function Profile() {
                                                 </div>
                                             </div>
                                             <div className="info-block">
-                                                <h6 className="section-title">Recent Orders</h6>
-                                                {profileData.recentOrders.map((orderData, index) => (
-                                                    <div className="info-row" key={index}>
-                                                        <div className="info-column">
-                                                            <p>Order </p>
-                                                            <h6 className="text-muted">{orderData.order}</h6>
-                                                        </div>
-                                                        <div className="info-column">
-                                                            <p>Date</p>
-                                                            <h6 className="text-muted">{orderData.date}</h6>
-                                                        </div>
-                                                        <div className="info-column">
-                                                            <p>Status</p>
-                                                            <h6 className="text-muted">{orderData.status}</h6>
-                                                        </div>
-                                                        <div className="info-column">
-                                                            <p>Total</p>
-                                                            <h6 className="text-muted">{orderData.total}</h6>
-                                                        </div>
-                                                    </div>
-                                                ))}
-                                            </div>
+    <h6 className="section-title">Recent Orders</h6>
+    
+    {/* Tiêu đề cột */}
+    <div className="info-row header-row">
+        <div className="info-column">
+            <p>Order</p>
+        </div>
+        <div className="info-column">
+            <p>Date</p>
+        </div>
+        <div className="info-column">
+            <p>Status</p>
+        </div>
+        <div className="info-column">
+            <p>Total</p>
+        </div>
+    </div>
+
+    {/* Dữ liệu đơn hàng */}
+    {profileData.recentOrders.map((orderData, index) => (
+        <div className="info-row" key={index}>
+            <div className="info-column">
+                <h6 className="text-muted">{orderData.order}</h6>
+            </div>
+            <div className="info-column">
+                <h6 className="text-muted">{orderData.date}</h6>
+            </div>
+            <div className="info-column">
+                <h6 className="text-muted">{orderData.status}</h6>
+            </div>
+            <div className="info-column">
+                <h6 className="text-muted">{orderData.total}</h6>
+            </div>
+        </div>
+    ))}
+</div>
+
 
                                             <button className="edit-profile" onClick={() => setIsEditing(true)}>
                                                 Edit Profile

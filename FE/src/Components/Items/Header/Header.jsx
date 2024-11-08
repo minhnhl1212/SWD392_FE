@@ -1,39 +1,32 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./Header.css";
 import { Link } from "react-router-dom";
 import { IoSearchOutline } from "react-icons/io5";
 import SliderCards from "../SliderCards/SliderCards";
 import { HiOutlineUserCircle } from "react-icons/hi2";
-import { LuUserCog } from "react-icons/lu";
-import { LuBookMarked } from "react-icons/lu";
-import { LuBarChartBig } from "react-icons/lu";
+import { LuUserCog, LuBookMarked, LuBarChartBig } from "react-icons/lu";
 import { TbBellCheck } from "react-icons/tb";
 import { BiLogOut } from "react-icons/bi";
-import Cookies from "js-cookie";
+import { useUser } from "../../../context/userContext";
 import LogoNSHOP from "../../../assets/Logo NSHOP.png";
 
 export default function Header() {
+    const { user, logoutUser } = useUser(); // Lấy user và hàm logout từ UserContext
     const [isDropDown, setIsDropDown] = useState(false);
     const [height, setHeight] = useState('0px');
     const contentDropdownRef = useRef(null);
-    const [user, setUser] = useState(null);
-    const [imgUser, setImgUser] = useState(null);
     const [isDropDownUser, setIsDropDownUser] = useState(false);
     const [searchInput, setSearchInput] = useState('');
     const [datas, setDatas] = useState([]);
 
     useEffect(() => {
         if (isDropDown) {
-            let process = document.querySelector('.search-result-container');
-            process.classList.add("show");
-            let process1 = document.querySelector('.search-bar');
-            process1.classList.add("slide");
+            document.querySelector('.search-result-container').classList.add("show");
+            document.querySelector('.search-bar').classList.add("slide");
             setHeight(`400px`);
         } else {
-            let process = document.querySelector('.search-result-container');
-            process.classList.remove("show");
-            let process1 = document.querySelector('.search-bar');
-            process1.classList.remove("slide");
+            document.querySelector('.search-result-container').classList.remove("show");
+            document.querySelector('.search-bar').classList.remove("slide");
             setHeight('0px');
         }
     }, [isDropDown]);
@@ -51,8 +44,8 @@ export default function Header() {
     }
 
     const handleLogOut = () => {
-        Cookies.remove('token');
-        window.location.href = '/';
+        logoutUser(); // Gọi hàm logout từ UserContext
+        window.location.href = '/login';
     }
 
     const handleInputKeyDown = (e) => {
@@ -76,7 +69,7 @@ export default function Header() {
                     <Link to="/home">Home</Link>
                     <Link to="/product">Product</Link>
                     <Link to="/cart">Cart</Link>
-                    <Link to="/profile">Profile</Link>
+                    {/* <Link to="/profile">Profile</Link> */}
                 </nav>
 
                 <div className="search-container">
@@ -87,7 +80,7 @@ export default function Header() {
                             placeholder="Searching for course"
                             onFocus={handleSearchFocus}
                             value={searchInput}
-                            onChange={(e) => { setSearchInput(e.target.value) }}
+                            onChange={(e) => setSearchInput(e.target.value)}
                             onKeyDown={handleInputKeyDown}
                         />
                     </div>
@@ -98,17 +91,17 @@ export default function Header() {
                         <div className="cancel-btn" onClick={handleCancelBtn}>CANCEL</div>
                     ) : (
                         user ? (
-                            <div className="user-action" onClick={() => { setIsDropDownUser(prev => !prev) }}>
+                            <div className="user-action" onClick={() => setIsDropDownUser(prev => !prev)}>
                                 <div className="user-logo">
-                                    {imgUser ? (
-                                        <img src={imgUser} alt="" />
+                                    {user.imgUrl ? (
+                                        <img src={user.imgUrl} alt="" />
                                     ) : (
                                         <HiOutlineUserCircle />
                                     )}
                                 </div>
                                 <div className="user-info">
                                     <p className="name">{user.username}</p>
-                                    <p className="email">{user.email}</p>
+                                    {/* <p className="email">{user.email}</p> */}
                                 </div>
                                 <div className={`user-dropdown ${isDropDownUser ? 'active' : ''}`}>
                                     <div className="dropdown-container">
@@ -117,18 +110,18 @@ export default function Header() {
                                             <TbBellCheck />
                                             Notification
                                         </div>
-                                        <a href="/student/profile" className="selection-block">
+                                        <Link to="/profile" className="selection-block">
                                             <LuUserCog />
                                             Account Profile
-                                        </a>
-                                        <a href="/student/my-learning/completed" className="selection-block">
+                                        </Link>
+                                        <Link to="/student/my-learning/completed" className="selection-block">
                                             <LuBookMarked />
                                             My Learning
-                                        </a>
-                                        <a href="/" className="selection-block">
+                                        </Link>
+                                        <Link to="/" className="selection-block">
                                             <LuBarChartBig />
                                             Dashboard
-                                        </a>
+                                        </Link>
                                         <div className="logout special-block" onClick={handleLogOut}>
                                             <BiLogOut />
                                             Log Out
@@ -138,8 +131,8 @@ export default function Header() {
                             </div>
                         ) : (
                             <div className="login-signup">
-                                <a href="/login" className="login">Log in</a>
-                                <a href="/signup" className="signup">Sign Up</a>
+                                <Link to="/login" className="login">Log in</Link>
+                                <Link to="/signup" className="signup">Sign Up</Link>
                             </div>
                         ))}
                 </div>
