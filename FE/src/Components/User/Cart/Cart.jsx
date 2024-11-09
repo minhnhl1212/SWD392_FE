@@ -171,17 +171,17 @@ export default function Cart() {
             vnp_Version: "2.1.0",
             vnp_Command: "pay",
             vnp_TmnCode: "ME8MTL4P", // Thay YOUR_TMNCODE bằng mã TmnCode bạn nhận từ VNPay
-            vnp_Amount: cartItems.reduce((total, item) => total + item.price * item.quantity, 0) * 100, // Tổng tiền tính bằng đồng
+            vnp_Amount: cartItems.reduce((total, item) => total + item.price * item.quantity, 0) * 100, // Tổng tiền tính bằng đồng\127.0.0.1
             vnp_BankCode : "VNBANK",
             vnp_CreateDate: vnpCreateDate,
             vnp_CurrCode: "VND",
-            vnp_IpAddr: "127.0.0.1",
+            vnp_IpAddr: "10.87.0.1",
             vnp_Locale: "vn",
             vnp_OrderInfo: "Thanh toán đơn hàng tại cửa hàng XYZ",
             vnp_OrderType: "other",
-            vnp_ReturnUrl: "http://nshop2.vn:5173//checkout-success", // URL trả về sau khi thanh toán thành công
+            vnp_ReturnUrl: "http://localhost:5173/checkout-success", // URL trả về sau khi thanh toán thành công
             vnp_ExpireDate : vnpExpireDate,
-            vnp_TxnRef: Date(date.getTime() + 30 * 60 * 1000).toString(), // Mã đơn hàng (mỗi đơn hàng một mã duy nhất)
+            vnp_TxnRef: vnpExpireDate.toString(), // Mã đơn hàng (mỗi đơn hàng một mã duy nhất)
             // vnp_SecureHash : "NY4ZISFPPI1HP81EQ4K46MQJ2DYD128Y",
         };
 

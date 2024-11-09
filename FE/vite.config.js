@@ -4,7 +4,7 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   plugins: [react()],
   server: {
-    host: "nshop2.vn",
+    
     // port: 5173,
     historyApiFallback: true, // Đảm bảo Vite fallback routing đúng cách
   },

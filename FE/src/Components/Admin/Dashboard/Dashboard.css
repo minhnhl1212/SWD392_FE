@@ -26,7 +26,7 @@
     margin: 0 auto;
     padding: 20px;
     display: flow-root;
-    margin-right: 10px;
+    /* margin-right: 10px; */
 }
 
 /* Header */
@@ -100,7 +100,7 @@
 
 #Dashboard .kpi-card h2 {
     margin: 8px 0;
-    font-size: 28px;
+    /* font-size: 28px; */
     font-weight: bold;
     color: #000000;
 }
@@ -199,7 +199,7 @@
 
 #Dashboard .kpi-card h2 {
     margin: 8px 0;
-    font-size: 28px;
+    /* font-size: 28px; */
     font-weight: bold;
     color: #000000;
 }
